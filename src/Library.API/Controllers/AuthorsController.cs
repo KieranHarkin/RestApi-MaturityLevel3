@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Library.API.Helpers;
 using Library.API.Models;
 using Library.API.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +24,7 @@ namespace Library.API.Controllers
 
             var authors = Mapper.Map<IEnumerable<AuthorDto>>(authorsFromRepo);
 
-            return new JsonResult(authors);
+            return Ok(authors);
         }
 
         [HttpGet("{id}")]
@@ -33,9 +32,14 @@ namespace Library.API.Controllers
         {
             var authorEntity = _libraryRepository.GetAuthor(id);
 
+            if (authorEntity == null)
+            {
+                return NotFound();
+            }
+
             var authorDto = Mapper.Map<AuthorDto>(authorEntity);
 
-            return new JsonResult(authorDto);
+            return Ok(authorDto);
         }
     }
 }
