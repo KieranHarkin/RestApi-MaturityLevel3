@@ -4,20 +4,21 @@ using Library.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using Library.API.Entities;
 
 namespace Library.API.Controllers
 {
     [Route("api/[controller]")]
     public class AuthorsController : Controller
     {
-        private ILibraryRepository _libraryRepository;
+        private readonly ILibraryRepository _libraryRepository;
 
         public AuthorsController(ILibraryRepository libraryRepository)
         {
             _libraryRepository = libraryRepository;
         }
 
-        [HttpGet()]
+        [HttpGet]
         public IActionResult GetAuthors()
         {
             var authorsFromRepo = _libraryRepository.GetAuthors();
@@ -27,7 +28,7 @@ namespace Library.API.Controllers
             return Ok(authors);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetAuthor")]
         public IActionResult GetAuthor(Guid id)
         {
             var authorEntity = _libraryRepository.GetAuthor(id);
@@ -40,6 +41,28 @@ namespace Library.API.Controllers
             var authorDto = Mapper.Map<AuthorDto>(authorEntity);
 
             return Ok(authorDto);
+        }
+
+        [HttpPost]
+        public IActionResult CreateAuthor([FromBody]AuthorForCreationDto author)
+        {
+            if (author == null)
+            {
+                return BadRequest();
+            }
+
+            var authorEntity = Mapper.Map<Author>(author);
+
+            _libraryRepository.AddAuthor(authorEntity);
+
+            if (!_libraryRepository.Save())
+            {
+                throw new Exception("Creating an author failed on save."); 
+            }
+
+            var authorToReturn = Mapper.Map<AuthorDto>(authorEntity);
+
+            return CreatedAtRoute("GetAuthor", new { id = authorToReturn.Id }, authorToReturn);
         }
     }
 }
