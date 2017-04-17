@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using Library.API.Entities;
+using Library.API.Helpers;
 using Microsoft.AspNetCore.Http;
 
 namespace Library.API.Controllers
@@ -20,9 +21,9 @@ namespace Library.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAuthors()
+        public IActionResult GetAuthors(AuthorsResourceParameters authorsResourceParameters)
         {
-            var authorsFromRepo = _libraryRepository.GetAuthors();
+            var authorsFromRepo = _libraryRepository.GetAuthors(authorsResourceParameters);
 
             var authors = Mapper.Map<IEnumerable<AuthorDto>>(authorsFromRepo);
 
