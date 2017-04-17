@@ -13,6 +13,7 @@ using Library.API.Entities;
 using Microsoft.EntityFrameworkCore;
 using Library.API.Models;
 using Library.API.Helpers;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace Library.API
@@ -60,6 +61,8 @@ namespace Library.API
         {
             loggerFactory.AddConsole();
 
+            loggerFactory.AddDebug(LogLevel.Information);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -70,6 +73,12 @@ namespace Library.API
                 {
                     appBuilder.Run(async context =>
                     {
+                        var exceptionHandler = context.Features.Get<IExceptionHandlerFeature>();
+                        if (exceptionHandler != null)
+                        {
+                            var logger = loggerFactory.CreateLogger("Global exception logger.");
+                            logger.LogError(500, exceptionHandler.Error, exceptionHandler.Error.Message);
+                        }
                         context.Response.StatusCode = 500;
                         await context.Response.WriteAsync("An unexpected fault happened. Please try again later.");
                     });
