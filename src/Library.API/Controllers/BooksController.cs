@@ -16,7 +16,7 @@ namespace Library.API.Controllers
     public class BooksController : Controller
     {
         private readonly ILibraryRepository _libraryRepository;
-        private ILogger<BooksController> _logger;
+        private readonly ILogger<BooksController> _logger;
 
         public BooksController(ILibraryRepository libraryRepository,
             ILogger<BooksController> logger)

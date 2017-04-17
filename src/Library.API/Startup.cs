@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +11,7 @@ using Library.API.Models;
 using Library.API.Helpers;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using NLog.Extensions.Logging;
 
 namespace Library.API
 {
@@ -62,6 +59,9 @@ namespace Library.API
             loggerFactory.AddConsole();
 
             loggerFactory.AddDebug(LogLevel.Information);
+
+            loggerFactory.AddNLog();
+
 
             if (env.IsDevelopment())
             {
