@@ -74,11 +74,16 @@ namespace Library.API.Services
 
             if (!string.IsNullOrEmpty(authorsResourceParameters.Genre))
             {
-                // trim & ignor casing
+                // trim & ignore casing
                 var genreForWhereClause = authorsResourceParameters.Genre
                     .Trim().ToLowerInvariant();
                 collectionBeforePaging = collectionBeforePaging
                     .Where(a => a.Genre.ToLowerInvariant() == genreForWhereClause);
+            }
+
+            if (!string.IsNullOrEmpty(authorsResourceParameters.SearchQuery))
+            {
+                // trim & ignore casing
             }
 
             return PagedList<Author>.Create(collectionBeforePaging,
