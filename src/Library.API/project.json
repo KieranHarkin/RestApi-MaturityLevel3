@@ -17,7 +17,8 @@
     "AutoMapper": "6.0.2",
     "Microsoft.AspNetCore.Mvc.Formatters.Xml": "1.0.1",
     "Microsoft.Extensions.Logging.Debug": "1.1.0",
-    "NLog.Extensions.Logging": "1.0.0-rtm-beta4"
+    "NLog.Extensions.Logging": "1.0.0-rtm-beta4",
+    "System.Linq.Dynamic.Core": "1.0.6.13"
   },
 
   "tools": {

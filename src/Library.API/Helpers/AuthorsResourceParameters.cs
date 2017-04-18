@@ -18,5 +18,7 @@
 
         public string SearchQuery { get; set; }
 
+        public string OrderBy { get; set; } = "Name";
+
     }
 }
