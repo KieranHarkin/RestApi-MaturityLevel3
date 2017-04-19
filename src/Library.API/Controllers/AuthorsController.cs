@@ -16,7 +16,7 @@ namespace Library.API.Controllers
     {
         private readonly ILibraryRepository _libraryRepository;
         private readonly IUrlHelper _urlHelper;
-        private readonly IPropertyMappingService _propertyMappingService;    
+        private readonly IPropertyMappingService _propertyMappingService;
         private ITypeHelperService _typeHelperService;
 
         public AuthorsController(ILibraryRepository libraryRepository,
@@ -73,7 +73,7 @@ namespace Library.API.Controllers
             var authors = Mapper.Map<IEnumerable<AuthorDto>>(authorsFromRepo);
 
             return Ok(authors.ShapeData(authorsResourceParameters.Fields));
-            
+
         }
 
         private string CreateAuthorsResourceUri(
@@ -119,8 +119,13 @@ namespace Library.API.Controllers
         }
 
         [HttpGet("{id}", Name = "GetAuthor")]
-        public IActionResult GetAuthor(Guid id)
+        public IActionResult GetAuthor(Guid id, [FromQuery] string fields)
         {
+            if (!_typeHelperService.TypeHasProperties<AuthorDto>(fields))
+            {
+                return BadRequest();
+            }
+
             var authorEntity = _libraryRepository.GetAuthor(id);
 
             if (authorEntity == null)
@@ -130,7 +135,7 @@ namespace Library.API.Controllers
 
             var authorDto = Mapper.Map<AuthorDto>(authorEntity);
 
-            return Ok(authorDto);
+            return Ok(authorDto.ShapeData(fields));
         }
 
         [HttpPost]
@@ -147,7 +152,7 @@ namespace Library.API.Controllers
 
             if (!_libraryRepository.Save())
             {
-                throw new Exception("Creating an author failed on save."); 
+                throw new Exception("Creating an author failed on save.");
             }
 
             var authorToReturn = Mapper.Map<AuthorDto>(authorEntity);
