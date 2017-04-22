@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace Library.API.Helpers
 {
@@ -29,12 +31,30 @@ namespace Library.API.Helpers
                     // get the value of the property on the source object
                     var propertyValue = propertyInfo.GetValue(source);
 
+                    // add the field to the ExpandoObject
+                    ((IDictionary<string, object>) dataShapedObject).Add(propertyInfo.Name, propertyValue);
 
+                    return dataShapedObject;
                 }
 
-                // ToDo: Finish functionality
-                return dataShapedObject;
+                var fieldsAfterSplit = fields.Split(',');
 
+                foreach (var field in fieldsAfterSplit)
+                {
+                    var propertyName = field.Trim();
+
+                    var propertyInfo = typeof(TSource)
+                        .GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+
+                    if (propertyInfo == null)
+                    {
+                        throw new Exception($"Property {propertyName} wasn't found on {typeof(TSource)}");
+                    }
+
+                    var propertyValue = propertyInfo.GetValue(source);
+
+                    ((IDictionary<string, object>) dataShapedObject).Add(propertyInfo.Name, propertyValue);
+                }
             }
 
             return dataShapedObject;

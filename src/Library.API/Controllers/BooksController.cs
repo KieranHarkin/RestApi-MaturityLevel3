@@ -290,7 +290,7 @@ namespace Library.API.Controllers
         {
             // link to self
             booksWrapper.Links.Add(
-                new LinkDto(_urlHelper.Link("GetBooksForAuthor", new { id  }),
+                new LinkDto(_urlHelper.Link("GetBooksForAuthor", new { }),
                 "self",
                 "GET"));
 
