@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace Library.API.Helpers
 {
     public static class ObjectExtensions
     {
-        public static ExpandoObject ShapeData<TSource>(this TSource source, string fields)
+        public static ExpandoObject ShapeData<TSource>(this TSource source,
+          string fields)
         {
             if (source == null)
             {
@@ -22,9 +21,9 @@ namespace Library.API.Helpers
 
             if (string.IsNullOrWhiteSpace(fields))
             {
-                // all public properties should be in the ExpandoObject
+                // all public properties should be in the ExpandoObject 
                 var propertyInfos = typeof(TSource)
-                    .GetProperties(BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                        .GetProperties(BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
 
                 foreach (var propertyInfo in propertyInfos)
                 {
@@ -32,32 +31,43 @@ namespace Library.API.Helpers
                     var propertyValue = propertyInfo.GetValue(source);
 
                     // add the field to the ExpandoObject
-                    ((IDictionary<string, object>) dataShapedObject).Add(propertyInfo.Name, propertyValue);
-
-                    return dataShapedObject;
+                    ((IDictionary<string, object>)dataShapedObject).Add(propertyInfo.Name, propertyValue);
                 }
 
-                var fieldsAfterSplit = fields.Split(',');
-
-                foreach (var field in fieldsAfterSplit)
-                {
-                    var propertyName = field.Trim();
-
-                    var propertyInfo = typeof(TSource)
-                        .GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-
-                    if (propertyInfo == null)
-                    {
-                        throw new Exception($"Property {propertyName} wasn't found on {typeof(TSource)}");
-                    }
-
-                    var propertyValue = propertyInfo.GetValue(source);
-
-                    ((IDictionary<string, object>) dataShapedObject).Add(propertyInfo.Name, propertyValue);
-                }
+                return dataShapedObject;
             }
 
+            // the field are separated by ",", so we split it.
+            var fieldsAfterSplit = fields.Split(',');
+
+            foreach (var field in fieldsAfterSplit)
+            {
+                // trim each field, as it might contain leading 
+                // or trailing spaces. Can't trim the var in foreach,
+                // so use another var.
+                var propertyName = field.Trim();
+
+                // use reflection to get the property on the source object
+                // we need to include public and instance, b/c specifying a binding flag overwrites the
+                // already-existing binding flags.
+                var propertyInfo = typeof(TSource)
+                    .GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+
+                if (propertyInfo == null)
+                {
+                    throw new Exception($"Property {propertyName} wasn't found on {typeof(TSource)}");
+                }
+
+                // get the value of the property on the source object
+                var propertyValue = propertyInfo.GetValue(source);
+
+                // add the field to the ExpandoObject
+                ((IDictionary<string, object>)dataShapedObject).Add(propertyInfo.Name, propertyValue);
+            }
+
+            // return
             return dataShapedObject;
         }
+
     }
 }
