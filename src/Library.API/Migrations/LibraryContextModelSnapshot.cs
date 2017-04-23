@@ -1,8 +1,9 @@
-﻿using Library.API.Entities;
+﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Library.API.Entities;
 
 namespace Library.API.Migrations
 {
@@ -21,6 +22,8 @@ namespace Library.API.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTimeOffset>("DateOfBirth");
+
+                    b.Property<DateTimeOffset?>("DateOfDeath");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
