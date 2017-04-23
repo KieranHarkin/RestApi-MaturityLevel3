@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Newtonsoft.Json.Serialization;
 using NLog.Extensions.Logging;
+using System.Linq;
 
 namespace Library.API
 {
@@ -44,6 +45,11 @@ namespace Library.API
                 setupAction.ReturnHttpNotAcceptable = true;
                 setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
                 setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
+
+                var jsonOutputFormatter = setupAction.OutputFormatters
+                    .OfType<JsonOutputFormatter>().FirstOrDefault();
+
+                jsonOutputFormatter?.SupportedMediaTypes.Add("application/vnd.marvin.hateoas+json");
             })
             .AddJsonOptions(options =>
                 {
