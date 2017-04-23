@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using AutoMapper.Configuration;
 using Library.API.Services;
 
 namespace Library.API.Helpers

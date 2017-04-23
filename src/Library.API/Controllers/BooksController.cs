@@ -7,7 +7,6 @@ using Library.API.Models;
 using Library.API.Services;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Semantics;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 
@@ -18,7 +17,7 @@ namespace Library.API.Controllers
     {
         private readonly ILibraryRepository _libraryRepository;
         private readonly ILogger<BooksController> _logger;
-        private IUrlHelper _urlHelper;
+        private readonly IUrlHelper _urlHelper;
 
         public BooksController(ILibraryRepository libraryRepository,
             ILogger<BooksController> logger,
