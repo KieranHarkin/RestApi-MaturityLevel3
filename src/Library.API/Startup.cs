@@ -46,6 +46,17 @@ namespace Library.API
                 setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
                 setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
 
+                var xmlDataContractSerializerInputFormatter =
+                    new XmlDataContractSerializerInputFormatter();
+
+                xmlDataContractSerializerInputFormatter.SupportedMediaTypes
+                    .Add("application/vnd.marvin.authorwithdateofdeath.full+xml");
+                xmlDataContractSerializerInputFormatter.SupportedMediaTypes
+                    .Add("application/vnd.marvin.author.full+xml");
+
+                setupAction.InputFormatters.Add(xmlDataContractSerializerInputFormatter);
+
+
                 var jsonOutputFormatter = setupAction.OutputFormatters
                     .OfType<JsonOutputFormatter>().FirstOrDefault();
 
