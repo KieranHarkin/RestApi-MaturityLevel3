@@ -1,4 +1,4 @@
-A RESTful API built using .NET Core. This API will be built to the hight possible level, level 3 maturity, based on the Richardson Maturity Model.
+A RESTful API built using .NET Core. This API will be built to the highest possible level, level 3 maturity, based on the Richardson Maturity Model.
 
 ### Richardson Maturity Model
 
